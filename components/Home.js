@@ -25,7 +25,6 @@ export default class HomeScreen extends React.Component {
   }
 
   _getuser() {
-    console.log(this.state.email);
     fetch("http://rocketapi.azure-api.net/api/users/" + this.state.email, {
       method: "GET"
     })
@@ -37,9 +36,8 @@ export default class HomeScreen extends React.Component {
         }
       })
       .then(responseJson => {
-        console.log(responseJson);
         list_user = JSON.stringify(responseJson);
-        console.log(list_user);
+
 
         if (responseJson) {
           this.props.navigation.navigate("DefectiveElevatorsList");
@@ -155,11 +153,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     paddingTop: 10,
     paddingBottom: 10,
-    color: '#FFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    color: '#000000',
     elevation: 1,
     marginLeft: 5,
     marginRight: 5,

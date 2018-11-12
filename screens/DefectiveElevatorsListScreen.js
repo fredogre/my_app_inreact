@@ -42,7 +42,7 @@ export default class App extends React.Component {
       )
     } else {
       let defectiveElevatorsList = this.state.defectiveElevatorsList.map((val, key) => {
-        return <TouchableHighlight style={styles.item} key={key} onPress={() => this.getElevatorDetailsScreen()}><Text style={styles.font_list}> {val.id}  -  {val.building_type}  -  {val.status}</Text></TouchableHighlight>
+        return <TouchableHighlight style={styles.item} key={key} onPress={() => this.getElevatorDetailsScreen()}><Text style={styles.font_list}> {val.id}  -  {val.building_type}</Text></TouchableHighlight>
       });
       return (
         <ScrollView>
