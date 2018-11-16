@@ -26,12 +26,12 @@ export default class HomeScreen extends React.Component {
     };
   }
   _getuser() {
-    fetch("http://rocketapi.azure-api.net/api/users/" + this.state.email, {
+    fetch("https://rocket-api-fred.azurewebsites.net/api/users/ " + this.state.email, {
       method: "GET"
     })
       .then(function(response) {
         if (response.status == 404) {
-          Alert.alert("You need a valid email address");
+          Alert.alert("Please insert a valid email address");
         }
         return response.json();
       })
@@ -72,7 +72,7 @@ export default class HomeScreen extends React.Component {
 
           <TextInput
             style={styles.textInput}
-            placeholder="Enter your email"
+            placeholder="Enter your employee email"
             onChangeText={email => this.setState({ email })}
             value={this.state.email}
           />

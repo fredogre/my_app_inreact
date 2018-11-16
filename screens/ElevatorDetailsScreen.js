@@ -21,14 +21,20 @@ export default class ElevatorDetails extends React.Component {
   }
 
   componentDidMount() {
-    return fetch("http://rocketapi.azure-api.net/api/elevators/status", {
+    const { navigation } = this.props;
+    var id = navigation.getParam("id");
+    console.log(id)
+
+    return fetch("https://rocket-api-fred.azurewebsites.net/api/elevators/status" + id, {
       method: "GET"
     })
       .then(response => response.json())
       .then(responseJson => {
         this.setState({
+          elevatorID: id,
+          elevatorStatus: responseJson,
           isLoading: false,
-          defectiveElevatorsList: responseJson
+          defectiveElevatorsList: responseJson.status
         });
       })
 
@@ -45,16 +51,16 @@ export default class ElevatorDetails extends React.Component {
         </View>
       );
     } else {
-      let defectiveElevatorsList = this.state.defectiveElevatorsList.map(
+      let elevatorStatus = this.state.elevatorStatus(
         (val, key) => {
           return (
             <TouchableHighlight
               key={key}
-              onPress={() => this.setPickerValue(value.value)}
+              onPress={() => this.setPickerValue(val.ID, val.status)}
               style={styles.container}
             >
               <Text>
-                {val.building_type}, {val.id}
+                {elevatorStatus}, {this.state.elevatorID}
               </Text>
             </TouchableHighlight>
           );
@@ -62,7 +68,7 @@ export default class ElevatorDetails extends React.Component {
       );
       return (
         <ScrollView>
-          <View style={styles.container}>{defectiveElevatorsList}</View>
+          <View style={styles.container}>{this.state.elevatorStatus}</View>
         </ScrollView>
       );
     }

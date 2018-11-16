@@ -4,11 +4,14 @@ import {
     Image,
     View,
     Button,
+    Text,
+    Alert,
 } from 'react-native';
 
 export default class ElevatorDetails extends React.Component {
     constructor(props) {
         super(props);
+        this._fetch = this._fetch.bind(this)
 
         this.state = {
             isLoading: true,
@@ -18,29 +21,38 @@ export default class ElevatorDetails extends React.Component {
         }
     }
 
-    componentDidMount() {
+    _fetch(){
         const { navigation } = this.props;
-        this.state.elevatorID = navigation.getParam('elevatorID');
+        var id = navigation.getParam('elevatorID');
         this.state.defectiveElevatorsList = navigation.getParam('elevatorList')
-
-        return fetch("http://rocketapi.azure-api.net/api/elevators/" + this.state.elevatorID, {
+        
+        fetch("https://rocket-api-fred.azurewebsites.net/api/elevators/" + id, {
             method: "GET"
         })
-            .then(responseJson => {
-                
-                this.setState({
-                    elevatorStatus: responseJson._bodyInit
-                })
-            })
-
-            .catch((error) => {
-                console.log(error)
-            })
+        .then(response => response.json())
+        .then(responseJson => {
+            this.setState({
+                elevatorID: id,
+                elevatorStatus: responseJson.status,
+                isLoading: false,
+                defectiveElevatorsList: responseJson.status
+            });
+        })
+        
+        .catch((error) => {
+            console.log(error)
+        })
     }
 
-    changeElevatorStatusHome(id) {
+
+    componentDidMount() {
+       this._fetch()
+    }
+    
+    changeElevatorStatusHome = async (id) => {
+        // const { navigation } = this.props; 
         if (this.state.elevatorStatus != 'Active') {
-            fetch("http://rocketapi.azure-api.net/api/elevators/" + id, {
+            let response = await fetch("https://rocket-api-fred.azurewebsites.net/api/elevators/" + id, {
                 method: "PUT",
                 headers: {
                     Accept: 'application/json',
@@ -50,8 +62,11 @@ export default class ElevatorDetails extends React.Component {
                     "status": "Active"
                 })
             })
-
-            this.setState({ elevatorStatus: "Active" });            
+            if(response.status === 204){
+                this.setState({ elevatorStatus: "Active" });  
+            } else {
+                Alert.alert('PROBLEM');
+            }
 
         } else {
             this.props.navigation.navigate("DefectiveElevatorsList", {
@@ -85,6 +100,7 @@ export default class ElevatorDetails extends React.Component {
 
                 <View style={styles.firstButtom}>
                     <Button onPress={() => { }} title={"ID: " + this.state.elevatorID  + " - Status: " + this.state.elevatorStatus} style={styles.button} color={this.ButtonStyle()} />
+                    
                 </View>
 
                 <Button title={this.ButtonText()} onPress={() => this.changeElevatorStatusHome(this.state.elevatorID)} />

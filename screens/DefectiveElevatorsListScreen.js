@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Modal, TouchableHighlight, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, Modal, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -12,14 +12,14 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    return fetch("http://rocketapi.azure-api.net/api/elevators/status", {
+    fetch("https://rocket-api-fred.azurewebsites.net/api/elevators/status", {
       method: "GET"
     })
       .then((response) => response.json())
       .then(responseJson => {
         this.setState({
           isLoading: false,
-          defectiveElevatorsList: responseJson
+          defectiveElevatorsList: responseJson.status
         })
 
       })
@@ -28,9 +28,13 @@ export default class App extends React.Component {
         console.log(error)
       });
   }
-
-  getElevatorDetailsScreen() {
-      this.props.navigation.navigate("ElevatorDetailsStack")
+  
+  getElevatorDetailsScreen = (id) => {
+     return () => {
+      this.props.navigation.navigate("ElevatorDetailsStack", {
+        id: id
+      })
+     }
   }
 
   render() {
@@ -42,7 +46,7 @@ export default class App extends React.Component {
       )
     } else {
       let defectiveElevatorsList = this.state.defectiveElevatorsList.map((val, key) => {
-        return <TouchableHighlight style={styles.item} key={key} onPress={() => this.getElevatorDetailsScreen()}><Text style={styles.font_list}> {val.id}  -  {val.building_type}</Text></TouchableHighlight>
+        return <TouchableOpacity style={styles.item} key={key} onPress={this.getElevatorDetailsScreen(val.id)}><Text style={styles.font_list}> {val.id}  -  {val.serialNumber}</Text></TouchableOpacity>
       });
       return (
         <ScrollView>

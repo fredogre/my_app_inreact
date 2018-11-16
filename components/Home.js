@@ -25,7 +25,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _getuser() {
-    fetch("http://rocketapi.azure-api.net/api/users/" + this.state.email, {
+    fetch("https://rocket-api-fred.azurewebsites.net/api/users/" + this.state.email, {
       method: "GET"
     })
       .then(function (response) {
@@ -66,13 +66,13 @@ export default class HomeScreen extends React.Component {
             <View style={styles.getStartedContainer}>
               {this._maybeRenderDevelopmentModeWarning()}
 
-              <Text style={styles.getStartedText}>Rocket Elevators </Text>
+              <Text style={styles.getStartedText}> Welcome to Rocket Elevator's Employee Portal </Text>
 
             </View>
 
             <TextInput
               style={styles.textInput}
-              placeholder="Enter your email"
+              placeholder="Enter your employee email"
               onChangeText={email => this.setState({ email })}
               value={this.state.email}
             />
@@ -121,17 +121,18 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    width: '100%',
-    height: 60,
-    backgroundColor: 'rgba(33, 150, 243, 1)',
-    fontSize: 22,
+    width: '50%',
+    height: 50,
+    backgroundColor: 'rgb(191, 8, 22)',
+    fontSize: 20,
     justifyContent: 'center',
     alignItems: 'center',
     color: 'rgba(255, 255, 255, 1)',
+    marginLeft: 80,
   },
   login: {
     color: 'rgba(255, 255, 255, 1)',
-    fontSize: 22,
+    fontSize: 30,
     fontWeight: '100',
   },
   container: {
@@ -139,9 +140,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   developmentModeText: {
-    marginBottom: 20,
+    marginBottom: 50,
     color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
+    fontSize: 70,
     lineHeight: 19,
     textAlign: 'center',
   },
@@ -155,24 +156,24 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     color: '#000000',
     elevation: 1,
-    marginLeft: 5,
-    marginRight: 5,
-    marginTop: 65,
-    marginBottom: 50,
+    marginLeft: 40,
+    marginRight: 40,
+    marginTop: 30,
+    marginBottom: 60,
   },  
   contentContainer: {
-    paddingTop: 30,
+    paddingTop: 20,
   },
   welcomeContainer: {
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 70,
     marginBottom: 20,
   },
   welcomeImage: {
     width: 200,
     height: 80,
     resizeMode: 'contain',
-    marginTop: 20,
+    marginTop: 40,
     marginLeft: -10,
   },
   getStartedContainer: {
@@ -180,11 +181,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
   },
   getStartedText: {
-    fontSize: 22,
+    fontSize: 20,
     color: '#acacac',
-    lineHeight: 24,
+    lineHeight: 36,
     textAlign: 'center',
-    marginTop: 10,
+    marginTop: 0,
+    marginBottom: 40,
   },
   tabBarInfoContainer: {
     position: 'absolute',

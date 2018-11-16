@@ -13,6 +13,7 @@ import {
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    this.refresh = this.refresh.bind(this);
 
     this.state = {
       isLoading: true,
@@ -20,7 +21,7 @@ export default class App extends React.Component {
   }
   
   refresh() {
-    fetch("http://rocketapi.azure-api.net/api/elevators/", {
+    fetch("https://rocket-api-fred.azurewebsites.net/api/elevators/status", {
       method: "GET"
     })
       .then((response) => response.json())
@@ -41,7 +42,7 @@ export default class App extends React.Component {
     const { navigation } = this.props;
     this.state.defectiveElevatorsList = navigation.getParam('newDefectiveElevatorsList');
 
-    return fetch("http://rocketapi.azure-api.net/api/elevators/", {
+    return fetch("https://rocket-api-fred.azurewebsites.net/api/elevators/status", {
       method: "GET"
     })
       .then((response) => response.json())
@@ -61,7 +62,9 @@ export default class App extends React.Component {
   getElevatorDetailsScreen(id) {
     this.props.navigation.navigate("ElevatorDetails", {
         elevatorID: id,
-        elevatorList: this.state.elevatorList
+        elevatorList: this.state.elevatorList,
+        callback: this.refresh
+
     })
   }
 
@@ -78,8 +81,9 @@ export default class App extends React.Component {
       )
     } else {
       let defectiveElevatorsList = this.state.defectiveElevatorsList.map((val, key) => {
-        return <TouchableHighlight style={styles.item} key={key} onPress={() => this.getElevatorDetailsScreen(val.id)}><Text style={styles.font_list}>  {val.id}  -  {val.buildingType}</Text></TouchableHighlight>
-      });
+        if (val.status != "Active") { 
+        return <TouchableHighlight style={styles.item} key={key} onPress={() => this.getElevatorDetailsScreen(val.id)}><Text style={styles.font_list}>  {val.id}  -  {val.serialNumber}</Text></TouchableHighlight>
+      }});
       return (
         <ScrollView>
           <View style={styles.welcomeContainer}>
@@ -88,8 +92,9 @@ export default class App extends React.Component {
           </View>
           <View>
           <TouchableOpacity onPress={() => this.refresh()} style={styles.buttonStyle}>
+          
           <Text style={styles.logout}>
-                REFRESH THE LIST
+                ELEVATORS LIST UPDATE
               </Text>
           </TouchableOpacity>
           </View>
@@ -129,17 +134,19 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee'
   },
   font_list: {
-    fontSize: 22,
+    fontSize: 15,
     color : '#000',
   },
   buttonStyle: {
     width: '100%',
     height: 100,
-    backgroundColor: 'rgba(33, 150, 243, 1)',
+    paddingLeft: 25,
+    paddingRight: 25,
+    backgroundColor: 'rgb(51, 102, 153)',
     fontSize: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    color : 'rgb(255, 255, 255)',
+    color : 'rgb(254, 252, 252)',
   },
   welcomeImage: {
     width: 175,
@@ -155,8 +162,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF', 
   },
   logout: {
-    color : 'rgba(255, 255, 255, 1)',
+    color : 'rgb(254, 252, 252)',
     fontSize: 22,
     fontWeight: '100',
   }
 });
+
+// refresh() {
+// fetch("http://rocketapi.azure-api.net/api/elevators/
